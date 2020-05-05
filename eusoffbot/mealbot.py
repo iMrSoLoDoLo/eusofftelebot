@@ -1,5 +1,6 @@
 from eusoffweb.models import Breakfast, Dinner
 from eusoffbot.response import Response
+from eusoffbot.timebot import TimeBot
 
 from datetime import datetime, timedelta
 from telegram import KeyboardButton, ReplyKeyboardMarkup
@@ -9,16 +10,7 @@ import pytz
 
 class MealBot():
     def __init__(self):
-        """
-        Define date variables and with timezone specifed
-        """
-        self.singaporeTimezone = pytz.timezone("Asia/Singapore")
-
-        self.todayTime = datetime.now(self.singaporeTimezone)
-        self.tomorrowTime = datetime.now(self.singaporeTimezone) + timedelta(days=1)
-
-        self.DateToday = self.todayTime.strftime("%Y-%m-%d")
-        self.DateTomorrow = self.tomorrowTime.strftime("%Y-%m-%d")
+        self.tb = TimeBot()
 
     def getMealplanResponse(self):
         CustomReplyArray = [
@@ -38,42 +30,67 @@ class MealBot():
         """
         This method queries the DB for breakfast with today's date
         """
-        todayBreakfast = Breakfast.query.filter(Breakfast.date == self.DateToday).first()
+        date = self.tb.getTodayDate()
+        todayBreakfast = Breakfast.query.filter(Breakfast.date == date).first()
+
+        try: 
+            print(date)
+        except:
+            print("Date error")
+
         if todayBreakfast:
             return Response(text=todayBreakfast.toString(), has_markup=True, reply_markup=None)
 
-        return Response(text="Breakfast is not provided today, or the menu is not yet updated)", has_markup=True, reply_markup=None)
+        return Response(text="Breakfast is not provided today, or the menu has yet to be updated.", has_markup=True, reply_markup=None)
 
 
     def getTodayDinner(self):
         """
         This method queries the DB for dinner with today's date
         """
-        todayDinner = Dinner.query.filter(Dinner.date == self.DateToday).first()
+        date = self.tb.getTodayDate()
+        try: 
+            print(date)
+        except:
+            print("Date error")
+
+        todayDinner = Dinner.query.filter(Dinner.date == date).first()
         if todayDinner:
             return Response(text=todayDinner.toString(), has_markup=True, reply_markup=None)
 
-        return Response(text="Dinner is not provided today, or the menu is not yet updated)", has_markup=True, reply_markup=None)
+        return Response(text="Dinner is not provided today, or the menu has yet to be updated.", has_markup=True, reply_markup=None)
 
 
     def getTomorrowBreakfast(self):
         """
         This method queries the DB for breakfast with tomorrow's date
         """
+        date = self.tb.getTomorrowDate()
+        try: 
+            print(date)
+        except:
+            print("Date error")
+
         tomorrowBreakfast = Breakfast.query.filter(
-            Breakfast.date == self.DateTomorrow).first()
+            Breakfast.date == date).first()
         if tomorrowBreakfast:
             return Response(text=tomorrowBreakfast.toString(), has_markup=True, reply_markup=None)
 
-        return Response(text="Breakfast is not provided tomorrow, or the menu is not yet updated)", has_markup=True, reply_markup=None)
+        return Response(text="Breakfast is not provided tomorrow, or the menu has yet to be updated.", has_markup=True, reply_markup=None)
 
 
     def getTomorrowDinner(self):
         """
         This method queries the DB for dinner with tomorrow's date
         """
-        tomorrowDinner = Dinner.query.filter(Dinner.date == self.DateTomorrow).first()
+        date = self.tb.getTomorrowDate()
+        try: 
+            print(date)
+        except:
+            print("Date error")
+            
+        tomorrowDinner = Dinner.query.filter(Dinner.date == date).first()
         if tomorrowDinner:
             return Response(text=tomorrowDinner.toString(), has_markup=True, reply_markup=None)
 
-        return Response(text="Dinner is not provided tomorrow, or the menu is not yet updated)", has_markup=True, reply_markup=None)
+        return Response(text="Dinner is not provided tomorrow, or the menu has yet to be updated.", has_markup=True, reply_markup=None)
