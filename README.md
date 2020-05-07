@@ -12,12 +12,6 @@
 > FAQBot - Displays the FAQ
 
 ### Authors:
-Bobby Cai Rong
+* **Cai Rong** - [isbobby](https://github.com/isbobby)
+* **Wong Wei Kang** - [wwongwk](https://github.com/wwongwk)
 
-Wong Wei Kang
-
-
-```
-
-### Room for Improvements
-1. Write unit tests (https://github.com/python-telegram-bot/python-telegram-bot/wiki/Writing-Tests)
